@@ -26,6 +26,8 @@ SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 R2_PUBLIC_URL = os.getenv("R2_PUBLIC_URL")
 
+# Inicialización corregida y compatible con la versión 2.11.0
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 # Inicialización del cliente de Supabase
 supabase: Client = Client(
     supabase_url=SUPABASE_URL, 
