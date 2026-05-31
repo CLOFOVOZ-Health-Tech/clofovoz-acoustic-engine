@@ -5,14 +5,11 @@ import librosa
 import requests
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from pydantic import BaseModel
-from supabase import Client, ClientOptions
+from supabase import create_client, Client
 
-# Línea 10: Declaración de la aplicación
 app = FastAPI(title="CLOFOVOZ Acoustic AI Engine")
 
-# =====================================================================
-# ENDPOINT DE SALUD (Ubicado exactamente aquí para el Health Check de Railway)
-# =====================================================================
+# Endpoint de Salud obligatorio para el Health Check de Railway
 @app.get("/")
 def health_check():
     return {
@@ -26,14 +23,8 @@ SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 R2_PUBLIC_URL = os.getenv("R2_PUBLIC_URL")
 
-# Inicialización corregida y compatible con la versión 2.11.0
+# Inicialización clásica y segura exigida por la versión 2.11.0
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
-# Inicialización del cliente de Supabase
-supabase: Client = Client(
-    supabase_url=SUPABASE_URL, 
-    supabase_key=SUPABASE_SERVICE_ROLE_KEY,
-    options=ClientOptions(postgrest_client_timeout=10)
-)
 
 class AnalysisRequest(BaseModel):
     audio_id: str
@@ -120,6 +111,6 @@ async def trigger_analysis(payload: AnalysisRequest, background_tasks: Backgroun
 
 if __name__ == "__main__":
     import uvicorn
-    # Leer el puerto dinámico asignado por Railway en producción, o usar 8000 en local
+    # Leer puerto dinámico de la nube para el balanceador de Railway
     port = int(os.getenv("PORT", 8000))
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
