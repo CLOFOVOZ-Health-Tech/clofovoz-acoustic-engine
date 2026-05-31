@@ -131,3 +131,10 @@ async def trigger_analysis(payload: AnalysisRequest, background_tasks: Backgroun
         payload.user_id
     )
     return {"status": "processing", "message": "Análisis acústico vocal iniciado en background."}
+
+if __name__ == "__main__":
+    import uvicorn
+    # Leer el puerto dinámico de la nube o usar el 8000 en local
+    port = int(os.getenv("PORT", 8000))
+    # CORRECCIÓN: Pasamos el punto de entrada como string "nombre_archivo:variable_fastapi"
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
