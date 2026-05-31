@@ -134,8 +134,8 @@ async def trigger_analysis(payload: AnalysisRequest, background_tasks: Backgroun
 
 if __name__ == "__main__":
     import uvicorn
-    # Railway inyecta el puerto automáticamente en la variable de entorno
-    port = int(os.getenv("PORT", 8000))
+    # En desarrollo local correrá aquí, pero en producción Railway usará el Procfile
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
     
     # PRODUCCIÓN: reload=False y host asignado de forma estricta
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False, workers=1)
