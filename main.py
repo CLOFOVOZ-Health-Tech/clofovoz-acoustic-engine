@@ -10,9 +10,17 @@ from supabase import create_client, Client
 app = FastAPI(title="CLOFOVOZ Acoustic AI Engine")
 
 # Inicialización de clientes cloud
-# 1. Asegúrate de incluir ClientOptions en tus imports superiores
 from supabase import create_client, Client, ClientOptions
 
+SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+
+# Inicialización explícita para evitar conflictos de argumentos en Linux/Cloud
+supabase: Client = Client(
+    supabase_url=SUPABASE_URL, 
+    supabase_key=SUPABASE_SERVICE_ROLE_KEY,
+    options=ClientOptions(postgrest_client_timeout=10)
+)
 SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
