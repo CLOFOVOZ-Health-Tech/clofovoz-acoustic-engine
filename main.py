@@ -134,7 +134,8 @@ async def trigger_analysis(payload: AnalysisRequest, background_tasks: Backgroun
 
 if __name__ == "__main__":
     import uvicorn
-    # Leer el puerto dinámico de la nube o usar el 8000 en local
+    # Railway inyecta el puerto automáticamente en la variable de entorno
     port = int(os.getenv("PORT", 8000))
-    # CORRECCIÓN: Pasamos el punto de entrada como string "nombre_archivo:variable_fastapi"
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+    
+    # PRODUCCIÓN: reload=False y host asignado de forma estricta
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False, workers=1)
