@@ -10,9 +10,20 @@ from supabase import create_client, Client
 app = FastAPI(title="CLOFOVOZ Acoustic AI Engine")
 
 # Inicialización de clientes cloud
+# 1. Asegúrate de incluir ClientOptions en tus imports superiores
+from supabase import create_client, Client, ClientOptions
+
 SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL")
-SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") # Llave bypass para servidores
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+
+# 2. Reemplaza la inicialización tradicional por el constructor de clase limpia:
+supabase: Client = Client(
+    supabase_url=SUPABASE_URL, 
+    supabase_key=SUPABASE_SERVICE_ROLE_KEY,
+    options=ClientOptions(postgrest_client_timeout=10)
+)
+
+R2_PUBLIC_URL = os.getenv("R2_PUBLIC_URL")
 
 R2_PUBLIC_URL = os.getenv("R2_PUBLIC_URL") # URL pública de lectura de tu Cloudflare R2
 
